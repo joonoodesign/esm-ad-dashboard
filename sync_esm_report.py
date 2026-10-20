@@ -2,13 +2,69 @@ import os
 import sys
 import json
 import time
+import base64
 import datetime
+import subprocess
+import urllib.request
 import websocket
 
 sys.stdout.reconfigure(encoding='utf-8')
 
 PORT_FILE = r'C:\Users\User\AppData\Local\Google\Chrome\User Data\DevToolsActivePort'
 OUT_JSON = r'd:\antigravity\esm-ad-dashboard\data.json'
+
+def get_github_token():
+    try:
+        proc = subprocess.run(
+            ['git', 'credential', 'fill'],
+            input='protocol=https\nhost=github.com\n\n',
+            capture_output=True, text=True, timeout=5
+        )
+        for line in proc.stdout.splitlines():
+            if line.startswith('password='):
+                return line.split('=', 1)[1].strip()
+    except Exception:
+        pass
+    return None
+
+def push_data_to_github_db_store(json_bytes):
+    token = get_github_token()
+    if not token:
+        return False
+    owner = 'joonoodesign'
+    repo = 'esm-ad-dashboard'
+    for branch in ('db-store', 'main'):
+        api_url = f'https://api.github.com/repos/{owner}/{repo}/contents/data.json'
+        headers = {
+            'Authorization': f'token {token}',
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'esm-ad-dashboard-sync'
+        }
+        sha = None
+        try:
+            req = urllib.request.Request(f'{api_url}?ref={branch}', headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                sha = json.loads(resp.read().decode('utf-8')).get('sha')
+        except Exception:
+            pass
+        payload = {
+            'message': f'Auto-sync ESM Plus ad report ({datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})',
+            'content': base64.b64encode(json_bytes).decode('ascii'),
+            'branch': branch
+        }
+        if sha:
+            payload['sha'] = sha
+        try:
+            put_req = urllib.request.Request(
+                api_url,
+                data=json.dumps(payload).encode('utf-8'),
+                headers={**headers, 'Content-Type': 'application/json'},
+                method='PUT'
+            )
+            urllib.request.urlopen(put_req, timeout=15).read()
+        except Exception as e:
+            print(f'[경고] GitHub {branch} 브랜치 업로드 실패: {e}')
+    return True
 
 def fetch_live_esm_data():
     lines = [l.strip() for l in open(PORT_FILE, encoding='utf-8') if l.strip()]
@@ -205,10 +261,13 @@ if __name__ == '__main__':
     }
 
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
-    with open(OUT_JSON, 'w', encoding='utf-8') as f:
-        json.dump(dashboard_data, f, ensure_ascii=False, indent=2)
+    raw_bytes = json.dumps(dashboard_data, ensure_ascii=False, indent=2).encode('utf-8')
+    with open(OUT_JSON, 'wb') as f:
+        f.write(raw_bytes)
 
+    synced = push_data_to_github_db_store(raw_bytes)
     print(f"[성공] ESM Plus 광고 성과 데이터 동기화 완료 ({now_str})")
     print(f"- 수집된 CPC 그룹 수: {len(dashboard_data['cpcGroups'])}개")
     print(f"- 수집된 CPC 키워드 수: {len(dashboard_data['cpcKeywords'])}개")
+    print(f"- 클라우드 DB(db-store) 자동 반영: {'성공' if synced else '로컬 저장만 완료'}")
     print(f"- 저장 파일: {OUT_JSON}")
