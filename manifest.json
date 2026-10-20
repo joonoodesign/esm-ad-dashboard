@@ -1,0 +1,18 @@
+{
+  "name": "주누디자인 ESM Plus 광고 성과 대시보드",
+  "short_name": "ESM광고보고",
+  "description": "G마켓·옥션 ESM Plus 광고 성과, 키워드 입찰가 및 상품명 SEO 최적화 통합 관리 웹앱",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

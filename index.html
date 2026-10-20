@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>주누디자인 ESM Plus 광고 성과 & 최적화 대시보드</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ESM광고보고" />
+  <meta name="theme-color" content="#0f172a" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-hover: #26354d;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img { width: 36px; height: 36px; border-radius: 8px; }
+    .brand h1 { font-size: 1.15rem; font-weight: 700; }
+    .brand p { font-size: 0.78rem; color: var(--muted); }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    button, .btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 13px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover { background: var(--card-hover); }
+    .btn-primary { background: var(--primary); border-color: var(--primary-dark); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-green { background: rgba(16,185,129,0.15); border-color: var(--green); color: #34d399; }
+    .container { max-width: 1360px; margin: 0 auto; padding: 20px; }
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(205px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .kpi-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+    .kpi-value { font-size: 1.45rem; font-weight: 800; }
+    .kpi-sub { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .card-title { font-size: 1.05rem; font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      background: rgba(15, 23, 42, 0.5);
+      white-space: nowrap;
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .badge-green { background: rgba(16,185,129,0.18); color: #34d399; }
+    .badge-amber { background: rgba(245,158,11,0.18); color: #fbbf24; }
+    .badge-red { background: rgba(239,68,68,0.18); color: #f87171; }
+    .badge-blue { background: rgba(59,130,246,0.18); color: #60a5fa; }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    input, select, textarea {
+      background: #0f172a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .bar-label { width: 135px; font-size: 0.82rem; font-weight: 600; flex-shrink: 0; }
+    .bar-track {
+      flex: 1;
+      height: 20px;
+      background: #0f172a;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      border-radius: 6px;
+    }
+    .bar-val { width: 140px; text-align: right; font-size: 0.8rem; color: var(--muted); flex-shrink: 0; }
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .modal h2 { font-size: 1.2rem; margin-bottom: 12px; }
+    .step-box {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .step-box h4 { color: #60a5fa; margin-bottom: 4px; font-size: 0.92rem; }
+    .step-box p { font-size: 0.84rem; color: var(--muted); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    @media (max-width: 640px) {
+      .container { padding: 12px; }
+      .kpi-value { font-size: 1.22rem; }
+      .bar-label { width: 95px; }
+      .bar-val { width: 105px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="icon.svg" alt="로고" />
+      <div>
+        <h1>주누디자인 ESM Plus 광고 성과 & 최적화 대시보드</h1>
+        <p id="syncStatusText">최근 동기화: 불러오는 중... | 매일 아침 09:00 자동 보고</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button onclick="openTutorialModal()">❓ 사용법 튜토리얼</button>
+      <button class="btn-green" onclick="openSyncModal()">☁️ 클라우드 DB 동기화</button>
+      <button class="btn-primary" onclick="pullFromCloud(true)">🔄 최신 데이터 새로고침</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('overview', this)">📊 종합 성과 & 아침 9시 브리핑</button>
+      <button class="tab-btn" onclick="switchTab('keywords', this)">🔑 파워클릭 키워드 상세 (1,285개)</button>
+      <button class="tab-btn" onclick="switchTab('optimizations', this)">⚡ 광고비·키워드·상품명 SEO 최적화 내역</button>
+      <button class="tab-btn" onclick="switchTab('calculator', this)">🧮 상품명+프로모션 100Byte 계산기</button>
+    </div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div id="tab-overview" class="tab-panel active">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">최근 30일 총 광고비 (CPC+CPP)</div>
+          <div class="kpi-value" id="kpiTotalCost">284,794원</div>
+          <div class="kpi-sub" id="kpiCostSplit">파워클릭 182,394원 / 노출보장 102,400원</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">최근 30일 광고 전환매출 (66건)</div>
+          <div class="kpi-value" style="color:#34d399" id="kpiRevenue">1,445,170원</div>
+          <div class="kpi-sub">직접+간접 전환 합산 공식 집계</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">전체 광고 수익률 (ROAS)</div>
+          <div class="kpi-value" style="color:#60a5fa" id="kpiRoas">507%</div>
+          <div class="kpi-sub">파워클릭 단독 ROAS 719%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">노출수 / 클릭수 / 평균 CPC</div>
+          <div class="kpi-value" id="kpiClicks">706클릭</div>
+          <div class="kpi-sub" id="kpiImpr">노출 300,161회 (CTR 0.24% / 평균 403원)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">광고 가능 잔액 (G마켓 / 옥션)</div>
+          <div class="kpi-value" id="kpiBalance">232,526원</div>
+          <div class="kpi-sub" id="kpiBalanceSub">G마켓 168,952원 / 옥션 63,574원</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">이번 최적화 월 예상 절감액</div>
+          <div class="kpi-value" style="color:#fbbf24" id="kpiSavings">약 85,000원/월</div>
+          <div class="kpi-sub">CPP -31,000원 + CPC 과열 입찰·누수 차단</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🌅 매일 아침 9시 일일 광고 성과 브리핑 로그</div>
+          <button onclick="openAddBriefingModal()">+ 브리핑 메모 추가</button>
+        </div>
+        <div id="briefingList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📈 파워클릭(CPC) 광고그룹별 실시간 성과 비교</div>
+        </div>
+        <div id="groupBars" style="margin-bottom:18px;"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>그룹번호</th>
+                <th>광고그룹명</th>
+                <th class="num">등록 키워드 수</th>
+                <th class="num">노출수</th>
+                <th class="num">클릭수</th>
+                <th class="num">평균 CPC</th>
+                <th class="num">광고비</th>
+                <th class="num">전환수</th>
+                <th class="num">전환매출</th>
+                <th class="num">ROAS</th>
+              </tr>
+            </thead>
+            <tbody id="groupTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: KEYWORDS -->
+    <div id="tab-keywords" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🔑 파워클릭 전 그룹 키워드 상세 현황 (<span id="kwCountLabel">0</span>개)</div>
+          <button onclick="exportKeywordsCsv()">📥 엑셀(CSV) 다운로드</button>
+        </div>
+        <div class="filter-bar">
+          <select id="groupFilter" onchange="renderKeywords()">
+            <option value="">전체 광고그룹</option>
+          </select>
+          <select id="statusFilter" onchange="renderKeywords()">
+            <option value="">전체 상태</option>
+            <option value="withCost">광고비 발생 키워드만</option>
+            <option value="withClicks">클릭 발생 키워드만</option>
+          </select>
+          <select id="sortFilter" onchange="renderKeywords()">
+            <option value="cost_desc">광고비 높은 순</option>
+            <option value="rev_desc">전환매출 높은 순</option>
+            <option value="bid_desc">현재 입찰가 높은 순</option>
+            <option value="impr_desc">노출수 높은 순</option>
+            <option value="clk_desc">클릭수 높은 순</option>
+          </select>
+          <input type="text" id="kwSearch" placeholder="키워드명 또는 상품번호 검색..." oninput="renderKeywords()" style="flex:1; min-width:200px;" />
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>광고그룹</th>
+                <th>상품번호</th>
+                <th>키워드</th>
+                <th class="num">현재 입찰가</th>
+                <th class="num">전일평균순위</th>
+                <th class="num">노출수</th>
+                <th class="num">클릭수</th>
+                <th class="num">평균CPC</th>
+                <th class="num">광고비</th>
+                <th class="num">전환수</th>
+                <th class="num">전환매출</th>
+                <th class="num">ROAS</th>
+              </tr>
+            </thead>
+            <tbody id="kwTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: OPTIMIZATIONS -->
+    <div id="tab-optimizations" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">1️⃣ 노출보장형(CPP) 입찰가 인하 완료 내역 (월 31,000원 절감)</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>입찰번호</th>
+                <th>사이트 / 영역</th>
+                <th>광고유형</th>
+                <th>키워드</th>
+                <th>상품번호</th>
+                <th class="num">기존 일 입찰가</th>
+                <th class="num">변경 일 입찰가</th>
+                <th class="num">월 절감액</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody id="cppOptBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">2️⃣ 11개 마스터 상품 전체 검색 노출(SEO) 프로모션 문구 & 가격비교 최적화 내역</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>마스터 상품번호</th>
+                <th>사이트 상품번호</th>
+                <th>기본 상품명</th>
+                <th>기존 프로모션 문구</th>
+                <th>변경된 프로모션 문구 (실시간 반영)</th>
+                <th>가격비교 노출</th>
+              </tr>
+            </thead>
+            <tbody id="seoOptBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: BYTE CALCULATOR -->
+    <div id="tab-calculator" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🧮 ESM Plus 상품명 + 프로모션 문구 100Byte 실시간 검증기</div>
+        </div>
+        <p style="font-size:0.86rem; color:var(--muted); margin-bottom:14px;">
+          G마켓·옥션은 <strong>기본 상품명 + 프로모션 문구 합산 최대 100Byte(한글 50자)</strong>까지 입력 가능하며, 두 문구 간 중복 단어가 없을수록 검색 노출 품질 지수가 높아집니다.
+        </p>
+        <div style="display:grid; gap:14px;">
+          <div>
+            <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:6px;">마스터 상품 불러오기</label>
+            <select id="calcProductSelect" onchange="loadProductIntoCalc()" style="width:100%;"></select>
+          </div>
+          <div>
+            <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:6px;">기본 상품명</label>
+            <input type="text" id="calcGoodsName" oninput="updateByteCalc()" style="width:100%;" />
+          </div>
+          <div>
+            <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:6px;">프로모션 문구 (확장 검색어)</label>
+            <input type="text" id="calcPromoName" oninput="updateByteCalc()" style="width:100%;" />
+          </div>
+          <div class="step-box" id="calcResultBox"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUTORIAL MODAL -->
+  <div class="modal-backdrop" id="tutorialModal">
+    <div class="modal">
+      <h2>👋 주누디자인 ESM Plus 광고 대시보드 사용법 튜토리얼</h2>
+      <p style="font-size:0.86rem; color:var(--muted); margin-bottom:16px;">
+        아이폰·아이패드·PC 어디서나 24시간 실시간으로 G마켓·옥션 광고 성과와 최적화 내역을 관리할 수 있습니다.
+      </p>
+      <div class="step-box">
+        <h4>STEP 1. 매일 아침 9시 자동 성과 보고 & 실시간 지표 확인</h4>
+        <p>매일 오전 9시 스케줄러가 ESM Plus 광고센터 데이터를 수집하여 채팅 보고서와 함께 이 웹앱의 클라우드 DB를 자동 업데이트합니다.</p>
+      </div>
+      <div class="step-box">
+        <h4>STEP 2. 파워클릭 1,285개 키워드 검색·정렬 및 엑셀 다운로드</h4>
+        <p>[파워클릭 키워드 상세] 탭에서 그룹별·클릭/비용 발생 여부별로 필터링하고 입찰가, 순위, 전환매출, ROAS를 즉시 비교하거나 CSV로 내려받을 수 있습니다.</p>
+      </div>
+      <div class="step-box">
+        <h4>STEP 3. 클라우드 DB 실시간 동기화 (GitHub db-store & 구글 드라이브)</h4>
+        <p>상단 [☁️ 클라우드 DB 동기화] 버튼에서 원클릭 자동 연결 링크(<code>#ghSync=...</code>)를 복사해 카카오톡으로 보내거나 구글 드라이브(Apps Script)와 연동할 수 있습니다.</p>
+      </div>
+      <div class="step-box">
+        <h4>STEP 4. 아이폰/아이패드 홈 화면에 앱으로 설치 (PWA)</h4>
+        <p>Safari 또는 Chrome 공유 메뉴에서 <strong>[홈 화면에 추가]</strong>를 누르면 일반 앱처럼 아이콘이 생성되어 전체 화면으로 빠르게 접속할 수 있습니다.</p>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="btn-primary" onclick="closeTutorialModal()">확인했습니다</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOUD SYNC MODAL -->
+  <div class="modal-backdrop" id="syncModal">
+    <div class="modal">
+      <h2>☁️ 클라우드 DB 실시간 동기화 설정 (GitHub & Google Drive)</h2>
+      <div class="step-box">
+        <h4>1. GitHub (db-store 브랜치) 실시간 동기화 & 원클릭 링크</h4>
+        <p style="margin-bottom:10px;">GitHub Personal Access Token을 입력하면 아이폰·아이패드·PC가 <code>db-store</code> 브랜치의 <code>data.json</code>을 실시간으로 읽고 저장합니다. (토큰은 브라우저에만 안전하게 저장되며 저장소에 절대 노출되지 않습니다.)</p>
+        <div style="display:grid; gap:8px;">
+          <input type="text" id="ghOwnerInput" placeholder="GitHub 계정 (기본: joonoodesign)" value="joonoodesign" />
+          <input type="text" id="ghRepoInput" placeholder="저장소 이름 (기본: esm-ad-dashboard)" value="esm-ad-dashboard" />
+          <input type="password" id="ghTokenInput" placeholder="GitHub Personal Access Token (ghp_...)" />
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
+            <button class="btn-primary" onclick="saveGhSyncConfig()">💾 GitHub 동기화 저장 및 즉시 업로드</button>
+            <button onclick="copyOneClickSyncUrl()">🔗 카톡 전달용 원클릭 연결 링크(#ghSync) 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <h4>2. 내 구글 드라이브 (Google Drive + Apps Script) DB 연동 옵션</h4>
+        <p style="margin-bottom:10px;">원하실 경우 내 구글 드라이브에도 동일한 JSON DB를 백업·동기화할 수 있습니다. Google Apps Script 웹앱 배포 URL을 입력해 주세요.</p>
+        <div style="display:grid; gap:8px;">
+          <input type="text" id="gdriveUrlInput" placeholder="https://script.google.com/macros/s/.../exec" />
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button class="btn-green" onclick="syncWithGoogleDrive()">📂 구글 드라이브 즉시 동기화</button>
+            <button onclick="copyAppsScriptCode()">📋 구글 드라이브 연동용 Apps Script 코드 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+        <button onclick="closeSyncModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD BRIEFING MODAL -->
+  <div class="modal-backdrop" id="briefingModal">
+    <div class="modal">
+      <h2>📝 일일 성과 브리핑 메모 추가</h2>
+      <div style="display:grid; gap:10px; margin-top:12px;">
+        <input type="date" id="newBriefDate" />
+        <input type="text" id="newBriefTitle" placeholder="제목 (예: 10월 21일 오전 9시 성과 점검)" />
+        <textarea id="newBriefSummary" rows="4" placeholder="성과 요약 및 특이사항 메모..."></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+        <button onclick="document.getElementById('briefingModal').classList.remove('open')">취소</button>
+        <button class="btn-primary" onclick="addBriefingItem()">저장 및 클라우드 반영</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let appData = null;
+    const STORAGE_KEY = 'esm_ad_dashboard_cfg_v1';
+
+    function getSyncCfg() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+          owner: 'joonoodesign',
+          repo: 'esm-ad-dashboard',
+          branch: 'db-store',
+          token: '',
+          gdriveUrl: ''
+        };
+      } catch (e) {
+        return { owner: 'joonoodesign', repo: 'esm-ad-dashboard', branch: 'db-store', token: '', gdriveUrl: '' };
+      }
+    }
+
+    function saveSyncCfg(cfg) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+    }
+
+    function checkHashSync() {
+      if (location.hash.startsWith('#ghSync=')) {
+        try {
+          const raw = decodeURIComponent(location.hash.replace('#ghSync=', ''));
+          const parsed = JSON.parse(atob(raw));
+          const cfg = getSyncCfg();
+          Object.assign(cfg, parsed);
+          saveSyncCfg(cfg);
+          history.replaceState(null, '', location.pathname + location.search);
+          alert('원클릭 클라우드 DB 자동 연결이 완료되었습니다!');
+        } catch (e) {
+          console.error('Hash parse error', e);
+        }
+      }
+    }
+
+    async function loadInitialData() {
+      checkHashSync();
+      const cfg = getSyncCfg();
+      document.getElementById('ghOwnerInput').value = cfg.owner || 'joonoodesign';
+      document.getElementById('ghRepoInput').value = cfg.repo || 'esm-ad-dashboard';
+      document.getElementById('ghTokenInput').value = cfg.token || '';
+      document.getElementById('gdriveUrlInput').value = cfg.gdriveUrl || '';
+
+      if (!localStorage.getItem('esm_tutorial_seen_v1')) {
+        openTutorialModal();
+        localStorage.setItem('esm_tutorial_seen_v1', '1');
+      }
+
+      await pullFromCloud(false);
+    }
+
+    async function pullFromCloud(manual) {
+      const cfg = getSyncCfg();
+      let loaded = null;
+
+      // 1. Try db-store branch via GitHub API or raw URL
+      try {
+        if (cfg.token) {
+          const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json?ref=${cfg.branch || 'db-store'}`;
+          const res = await fetch(apiUrl, {
+            headers: {
+              'Authorization': `token ${cfg.token}`,
+              'Accept': 'application/vnd.github.v3.raw'
+            },
+            cache: 'no-store'
+          });
+          if (res.ok) loaded = await res.json();
+        }
+        if (!loaded) {
+          const rawUrl = `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch || 'db-store'}/data.json?t=${Date.now()}`;
+          const res = await fetch(rawUrl, { cache: 'no-store' });
+          if (res.ok) loaded = await res.json();
+        }
+      } catch (e) {
+        console.warn('Cloud fetch fallback to local data.json', e);
+      }
+
+      // 2. Fallback to local ./data.json
+      if (!loaded) {
+        try {
+          const res = await fetch('./data.json?t=' + Date.now(), { cache: 'no-store' });
+          if (res.ok) loaded = await res.json();
+        } catch (e) {
+          console.error('Local data.json load error', e);
+        }
+      }
+
+      if (loaded) {
+        appData = loaded;
+        renderAll();
+        if (manual) alert('최신 ESM Plus 광고 성과 데이터를 불러왔습니다.');
+      }
+    }
+
+    async function pushToCloud() {
+      if (!appData) return;
+      const cfg = getSyncCfg();
+      if (!cfg.token) return;
+      try {
+        const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`;
+        let sha = undefined;
+        const getRes = await fetch(`${apiUrl}?ref=${cfg.branch || 'db-store'}`, {
+          headers: { 'Authorization': `token ${cfg.token}` }
+        });
+        if (getRes.ok) {
+          const meta = await getRes.json();
+          sha = meta.sha;
+        }
+        const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${cfg.token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update ESM Plus ad dashboard data (${new Date().toISOString()})`,
+            content: contentB64,
+            branch: cfg.branch || 'db-store',
+            sha
+          })
+        });
+        if (putRes.ok) {
+          document.getElementById('syncStatusText').innerText = `최근 동기화: ${appData.updatedAt} (GitHub db-store 실시간 연동됨)`;
+        }
+      } catch (e) {
+        console.error('Push to GitHub error', e);
+      }
+    }
+
+    function fmt(n) {
+      return Number(n || 0).toLocaleString('ko-KR');
+    }
+
+    function renderAll() {
+      if (!appData) return;
+      document.getElementById('syncStatusText').innerText =
+        `기준 시각: ${appData.updatedAt} | 마스터 계정: ${appData.account?.masterId || 'joonoodesign'} | 매일 오전 09:00 자동 보고`;
+
+      const s = appData.summary30d || {};
+      const b = appData.account?.balances || {};
+      document.getElementById('kpiTotalCost').innerText = fmt(s.totalCost) + '원';
+      document.getElementById('kpiCostSplit').innerText = `파워클릭 ${fmt(s.cpcCost)}원 / 노출보장 ${fmt(s.cppCost)}원`;
+      document.getElementById('kpiRevenue').innerText = fmt(s.revenue) + '원';
+      document.getElementById('kpiRoas').innerText = fmt(s.roas) + '%';
+      document.getElementById('kpiClicks').innerText = fmt(s.clicks) + '클릭';
+      document.getElementById('kpiImpr').innerText = `노출 ${fmt(s.impressions)}회 (CTR ${s.ctr}% / 평균 ${fmt(s.avgCpc)}원)`;
+      document.getElementById('kpiBalance').innerText = fmt((b.gmarketTotal || 0) + (b.auctionTotal || 0)) + '원';
+      document.getElementById('kpiBalanceSub').innerText = `G마켓 ${fmt(b.gmarketTotal)}원 / 옥션 ${fmt(b.auctionTotal)}원`;
+      document.getElementById('kpiSavings').innerText = `약 ${fmt(s.estimatedMonthlySavings || 85000)}원/월`;
+
+      // Briefings
+      const briefEl = document.getElementById('briefingList');
+      briefEl.innerHTML = (appData.dailyBriefings || []).map(item => `
+        <div class="step-box" style="margin-bottom:8px;">
+          <h4>📅 ${item.title}</h4>
+          <p>${item.summary}</p>
+        </div>
+      `).join('');
+
+      // Groups
+      const groups = appData.cpcGroups || [];
+      const maxCost = Math.max(1, ...groups.map(g => g.cost || 0));
+      document.getElementById('groupBars').innerHTML = groups.map(g => {
+        const pct = Math.min(100, Math.round(((g.cost || 0) / maxCost) * 100));
+        return `
+          <div class="bar-row">
+            <div class="bar-label">${g.groupName}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+            <div class="bar-val">${fmt(g.cost)}원 (ROAS ${fmt(g.roas)}%)</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('groupTableBody').innerHTML = groups.map(g => {
+        const badgeClass = g.roas >= 500 ? 'badge-green' : (g.roas >= 200 ? 'badge-amber' : 'badge-red');
+        return `
+          <tr>
+            <td>${g.groupNo}</td>
+            <td><strong>${g.groupName}</strong></td>
+            <td class="num">${fmt(g.keywordCount)}개</td>
+            <td class="num">${fmt(g.impressions)}</td>
+            <td class="num">${fmt(g.clicks)}</td>
+            <td class="num">${fmt(g.avgCpc)}원</td>
+            <td class="num"><strong>${fmt(g.cost)}원</strong></td>
+            <td class="num">${fmt(g.conversions)}건</td>
+            <td class="num" style="color:#34d399; font-weight:700;">${fmt(g.revenue)}원</td>
+            <td class="num"><span class="badge ${badgeClass}">${fmt(g.roas)}%</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      // Populate group filter
+      const gf = document.getElementById('groupFilter');
+      const curGf = gf.value;
+      gf.innerHTML = '<option value="">전체 광고그룹</option>' +
+        groups.map(g => `<option value="${g.groupNo}">${g.groupName} (${g.keywordCount}개)</option>`).join('');
+      gf.value = curGf;
+
+      renderKeywords();
+
+      // CPP Optimizations
+      document.getElementById('cppOptBody').innerHTML = (appData.cppOptimizations || []).map(c => `
+        <tr>
+          <td>#${c.seq}</td>
+          <td>${c.site}</td>
+          <td>${c.adType}</td>
+          <td><strong>${c.keyword}</strong></td>
+          <td>${c.goodsNo}</td>
+          <td class="num">${fmt(c.oldBid)}원</td>
+          <td class="num" style="color:#60a5fa; font-weight:700;">${fmt(c.newBid)}원</td>
+          <td class="num"><span class="badge badge-green">-${fmt(c.monthlySaved)}원/월</span></td>
+          <td>${c.note}</td>
+        </tr>
+      `).join('');
+
+      // Product SEO Optimizations
+      const prods = appData.productSeoOptimizations || [];
+      document.getElementById('seoOptBody').innerHTML = prods.map(p => `
+        <tr>
+          <td><strong>${p.goodsNo}</strong></td>
+          <td>${p.siteGoods}</td>
+          <td>${p.goodsName}</td>
+          <td style="color:var(--muted);">${p.oldPromo}</td>
+          <td style="color:#34d399; font-weight:700;">${p.newPromo}</td>
+          <td><span class="badge badge-blue">${p.priceComp}</span></td>
+        </tr>
+      `).join('');
+
+      // Calculator select
+      const sel = document.getElementById('calcProductSelect');
+      sel.innerHTML = prods.map((p, idx) => `<option value="${idx}">[${p.goodsNo}] ${p.goodsName}</option>`).join('');
+      loadProductIntoCalc();
+    }
+
+    function renderKeywords() {
+      if (!appData) return;
+      const gNo = document.getElementById('groupFilter').value;
+      const st = document.getElementById('statusFilter').value;
+      const sort = document.getElementById('sortFilter').value;
+      const q = (document.getElementById('kwSearch').value || '').trim().toLowerCase();
+
+      let list = (appData.cpcKeywords || []).filter(k => {
+        if (gNo && k.groupNo !== gNo) return false;
+        if (st === 'withCost' && !(k.cost > 0)) return false;
+        if (st === 'withClicks' && !(k.clicks > 0)) return false;
+        if (q && !(`${k.keyword} ${k.goodsNo} ${k.groupName}`.toLowerCase().includes(q))) return false;
+        return true;
+      });
+
+      list.sort((a, b) => {
+        if (sort === 'cost_desc') return (b.cost || 0) - (a.cost || 0);
+        if (sort === 'rev_desc') return (b.revenue || 0) - (a.revenue || 0);
+        if (sort === 'bid_desc') return (b.bid || 0) - (a.bid || 0);
+        if (sort === 'impr_desc') return (b.impressions || 0) - (a.impressions || 0);
+        if (sort === 'clk_desc') return (b.clicks || 0) - (a.clicks || 0);
+        return 0;
+      });
+
+      document.getElementById('kwCountLabel').innerText = fmt(list.length);
+      document.getElementById('kwTableBody').innerHTML = list.slice(0, 300).map(k => `
+        <tr>
+          <td>${k.groupName}</td>
+          <td>${k.goodsNo}</td>
+          <td><strong>${k.keyword}</strong></td>
+          <td class="num" style="color:#60a5fa; font-weight:700;">${fmt(k.bid)}원</td>
+          <td class="num">${k.rank > 0 ? k.rank + '위' : '-'}</td>
+          <td class="num">${fmt(k.impressions)}</td>
+          <td class="num">${fmt(k.clicks)}</td>
+          <td class="num">${fmt(k.avgCpc)}원</td>
+          <td class="num"><strong>${fmt(k.cost)}원</strong></td>
+          <td class="num">${fmt(k.conversions)}건</td>
+          <td class="num" style="color:#34d399;">${fmt(k.revenue)}원</td>
+          <td class="num">${k.roas > 0 ? `<span class="badge badge-green">${fmt(k.roas)}%</span>` : '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getByteLength(str) {
+      let b = 0;
+      for (let i = 0; i < str.length; i++) {
+        b += str.charCodeAt(i) > 127 ? 2 : 1;
+      }
+      return b;
+    }
+
+    function loadProductIntoCalc() {
+      const prods = appData?.productSeoOptimizations || [];
+      const idx = Number(document.getElementById('calcProductSelect').value || 0);
+      const p = prods[idx];
+      if (!p) return;
+      document.getElementById('calcGoodsName').value = p.goodsName;
+      document.getElementById('calcPromoName').value = p.newPromo;
+      updateByteCalc();
+    }
+
+    function updateByteCalc() {
+      const g = document.getElementById('calcGoodsName').value || '';
+      const p = document.getElementById('calcPromoName').value || '';
+      const gBytes = getByteLength(g);
+      const pBytes = getByteLength(p);
+      const total = gBytes + pBytes;
+
+      const gWords = g.split(/\s+/).filter(Boolean);
+      const pWords = p.split(/\s+/).filter(Boolean);
+      const dupes = pWords.filter(w => gWords.includes(w));
+
+      const box = document.getElementById('calcResultBox');
+      const ok = total <= 100 && dupes.length === 0;
+      box.innerHTML = `
+        <h4>${ok ? '✅ 최적 상태 (저장 가능)' : '⚠️ 바이트 초과 또는 중복 단어 확인 필요'} — 총 ${total} / 100 Byte</h4>
+        <p>기본 상품명: <strong>${gBytes} Byte</strong> | 프로모션 문구: <strong>${pBytes} Byte</strong> | 잔여 여유: <strong>${100 - total} Byte</strong></p>
+        <p style="margin-top:4px;">중복 키워드 검사: ${dupes.length === 0 ? '<span style="color:#34d399;">중복 없음 (SEO 최상)</span>' : '<span style="color:#f87171;">중복 단어 발견: ' + dupes.join(', ') + '</span>'}</p>
+      `;
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function openTutorialModal() { document.getElementById('tutorialModal').classList.add('open'); }
+    function closeTutorialModal() { document.getElementById('tutorialModal').classList.remove('open'); }
+    function openSyncModal() { document.getElementById('syncModal').classList.add('open'); }
+    function closeSyncModal() { document.getElementById('syncModal').classList.remove('open'); }
+
+    async function saveGhSyncConfig() {
+      const cfg = getSyncCfg();
+      cfg.owner = document.getElementById('ghOwnerInput').value.trim() || 'joonoodesign';
+      cfg.repo = document.getElementById('ghRepoInput').value.trim() || 'esm-ad-dashboard';
+      cfg.token = document.getElementById('ghTokenInput').value.trim();
+      cfg.gdriveUrl = document.getElementById('gdriveUrlInput').value.trim();
+      saveSyncCfg(cfg);
+      await pushToCloud();
+      alert('GitHub db-store 클라우드 동기화 설정이 저장되었습니다.');
+    }
+
+    function copyOneClickSyncUrl() {
+      const cfg = getSyncCfg();
+      cfg.owner = document.getElementById('ghOwnerInput').value.trim() || 'joonoodesign';
+      cfg.repo = document.getElementById('ghRepoInput').value.trim() || 'esm-ad-dashboard';
+      cfg.token = document.getElementById('ghTokenInput').value.trim();
+      saveSyncCfg(cfg);
+      const hashPayload = btoa(JSON.stringify({
+        owner: cfg.owner,
+        repo: cfg.repo,
+        branch: 'db-store',
+        token: cfg.token
+      }));
+      const url = `${location.origin}${location.pathname}#ghSync=${encodeURIComponent(hashPayload)}`;
+      navigator.clipboard.writeText(url);
+      alert('원클릭 자동 연결 링크(#ghSync=...)가 클립보드에 복사되었습니다!\n아이폰/아이패드 카카오톡 나에게 보내기로 전송해 바로 열 수 있습니다.');
+    }
+
+    async function syncWithGoogleDrive() {
+      const url = document.getElementById('gdriveUrlInput').value.trim();
+      if (!url) {
+        alert('Google Apps Script 웹앱 URL을 먼저 입력해 주세요.');
+        return;
+      }
+      const cfg = getSyncCfg();
+      cfg.gdriveUrl = url;
+      saveSyncCfg(cfg);
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(appData)
+        });
+        alert('구글 드라이브로 현재 광고 성과 DB 백업 전송을 완료했습니다.');
+      } catch (e) {
+        alert('구글 드라이브 전송 중 오류: ' + e.message);
+      }
+    }
+
+    function copyAppsScriptCode() {
+      const code = `function doPost(e) {
+  var folder = DriveApp.getRootFolder();
+  var files = folder.getFilesByName('esm_ad_dashboard_db.json');
+  var content = e.postData.contents;
+  if (files.hasNext()) {
+    files.next().setContent(content);
+  } else {
+    folder.createFile('esm_ad_dashboard_db.json', content, MimeType.PLAIN_TEXT);
+  }
+  return ContentService.createTextOutput(JSON.stringify({status: 'ok'})).setMimeType(ContentService.MimeType.JSON);
+}
+function doGet() {
+  var files = DriveApp.getRootFolder().getFilesByName('esm_ad_dashboard_db.json');
+  var content = files.hasNext() ? files.next().getBlob().getDataAsString() : '{}';
+  return ContentService.createTextOutput(content).setMimeType(ContentService.MimeType.JSON);
+}`;
+      navigator.clipboard.writeText(code);
+      alert('구글 드라이브 연동용 Google Apps Script 코드가 복사되었습니다.');
+    }
+
+    function openAddBriefingModal() {
+      document.getElementById('newBriefDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('briefingModal').classList.add('open');
+    }
+
+    async function addBriefingItem() {
+      const d = document.getElementById('newBriefDate').value;
+      const t = document.getElementById('newBriefTitle').value.trim();
+      const s = document.getElementById('newBriefSummary').value.trim();
+      if (!t || !s) return alert('제목과 내용을 입력해 주세요.');
+      appData.dailyBriefings = appData.dailyBriefings || [];
+      appData.dailyBriefings.unshift({ date: d, title: t, summary: s });
+      appData.updatedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+      renderAll();
+      await pushToCloud();
+      document.getElementById('briefingModal').classList.remove('open');
+    }
+
+    function exportKeywordsCsv() {
+      if (!appData || !appData.cpcKeywords) return;
+      const rows = [
+        ['광고그룹', '상품번호', '키워드', '입찰가', '전일순위', '노출수', '클릭수', '평균CPC', '광고비', '전환수', '전환매출', 'ROAS(%)']
+      ];
+      for (const k of appData.cpcKeywords) {
+        rows.push([
+          k.groupName, k.goodsNo, k.keyword, k.bid, k.rank,
+          k.impressions, k.clicks, k.avgCpc, k.cost, k.conversions, k.revenue, k.roas
+        ]);
+      }
+      const csv = '\uFEFF' + rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `esm_keywords_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    window.addEventListener('DOMContentLoaded', loadInitialData);
+  </script>
+</body>
+</html>
