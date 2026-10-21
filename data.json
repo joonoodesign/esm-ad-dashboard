@@ -1,16 +1,16 @@
 {
-  "updatedAt": "2026-10-21 09:40:56",
+  "updatedAt": "2026-10-21 09:47:14",
   "account": {
     "masterId": "joonoodesign",
     "gmarketId": "jndesign",
     "auctionId": "joonoodesign",
     "balances": {
-      "gmarketTotal": 168952,
-      "gmarketCash": 168452,
-      "gmarketFree": 500,
-      "auctionTotal": 63574,
-      "auctionCash": 55436,
-      "auctionFree": 8138
+      "gmarketTotal": 64077,
+      "gmarketCash": 64077,
+      "gmarketFree": 0,
+      "auctionTotal": 79333,
+      "auctionCash": 79333,
+      "auctionFree": 0
     }
   },
   "yesterdaySummary": {
@@ -279,44 +279,44 @@
       "groupNo": "13638900",
       "groupName": "A)명함",
       "keywordCount": 200,
-      "impressions": 52,
-      "clicks": 15,
-      "cost": 0,
-      "conversions": 0,
-      "revenue": 0,
-      "roas": 0,
-      "avgCpc": 0
+      "impressions": 127,
+      "clicks": 34,
+      "cost": 13442,
+      "conversions": 58,
+      "revenue": 58000,
+      "roas": 431,
+      "avgCpc": 395
     },
     {
       "groupNo": "13638916",
       "groupName": "A)스티커제작",
       "keywordCount": 200,
-      "impressions": 29,
-      "clicks": 1,
-      "cost": 0,
+      "impressions": 108,
+      "clicks": 9,
+      "cost": 3861,
       "conversions": 0,
       "revenue": 0,
       "roas": 0,
-      "avgCpc": 0
+      "avgCpc": 429
     },
     {
       "groupNo": "13638891",
       "groupName": "A)취급주의",
       "keywordCount": 198,
-      "impressions": 62,
-      "clicks": 3,
-      "cost": 0,
-      "conversions": 0,
-      "revenue": 0,
-      "roas": 0,
-      "avgCpc": 0
+      "impressions": 22,
+      "clicks": 1,
+      "cost": 726,
+      "conversions": 1,
+      "revenue": 9500,
+      "roas": 1309,
+      "avgCpc": 726
     },
     {
       "groupNo": "3822725",
       "groupName": "A)전단지,종이자석",
       "keywordCount": 200,
-      "impressions": 25,
-      "clicks": 2,
+      "impressions": 22,
+      "clicks": 0,
       "cost": 0,
       "conversions": 0,
       "revenue": 0,
@@ -327,20 +327,20 @@
       "groupNo": "13638895",
       "groupName": "A)실사출력",
       "keywordCount": 44,
-      "impressions": 1127,
-      "clicks": 23,
-      "cost": 0,
+      "impressions": 313,
+      "clicks": 4,
+      "cost": 2453,
       "conversions": 0,
       "revenue": 0,
       "roas": 0,
-      "avgCpc": 0
+      "avgCpc": 613
     },
     {
       "groupNo": "13638886",
       "groupName": "A)리플렛",
       "keywordCount": 120,
-      "impressions": 19,
-      "clicks": 2,
+      "impressions": 4,
+      "clicks": 0,
       "cost": 0,
       "conversions": 0,
       "revenue": 0,
@@ -351,19 +351,19 @@
       "groupNo": "13638880",
       "groupName": "A)리뷰스티커",
       "keywordCount": 198,
-      "impressions": 253,
-      "clicks": 6,
-      "cost": 0,
+      "impressions": 78,
+      "clicks": 4,
+      "cost": 1914,
       "conversions": 0,
       "revenue": 0,
       "roas": 0,
-      "avgCpc": 0
+      "avgCpc": 479
     },
     {
       "groupNo": "13724187",
       "groupName": "A)빌지,영수증",
       "keywordCount": 25,
-      "impressions": 0,
+      "impressions": 115,
       "clicks": 0,
       "cost": 0,
       "conversions": 0,
@@ -375,8 +375,8 @@
       "groupNo": "3798157",
       "groupName": "(A)간편등록",
       "keywordCount": 100,
-      "impressions": 1125,
-      "clicks": 1,
+      "impressions": 305,
+      "clicks": 0,
       "cost": 0,
       "conversions": 0,
       "revenue": 0,
@@ -23519,8 +23519,8 @@
   "dailyBriefings": [
     {
       "date": "2026-10-21",
-      "title": "2026-10-21 오전 9시 정기 성과 보고 (전일 2026-10-20 실적 및 누적 현황)",
-      "summary": "전일(2026-10-20) 파워클릭 노출 0회, 클릭 0회, 광고비 0원(평균 CPC 0원), 전환매출 0원(ROAS 0%). 최근 30일 파워클릭 누적 광고비 0원, 전환매출 0원 기록."
+      "title": "2026-10-21 오전 9시 정기 광고·판매 성과 브리핑",
+      "summary": "① 최근 7일(10/14~10/20) 스토어 전체 매출 1,576,100원(G마켓 1,252,600원 +12.3%↑ / 옥션 323,500원 +12.5%↑) ② 파워클릭 최근 7일 노출 1,106회, 클릭 52회(CTR 4.70%), 평균 CPC 431원, 광고비 22,396원, 전환 59건, 매출 67,500원(ROAS 301.4%) — 어제 신규 생성한 'A)빌지,영수증' 그룹에서 첫 115회 노출 발생 시작! ③ 노출보장형(CPP) 어제(10/20) 11건 전시·광고비 6,000원으로 클릭 189회(전일 162회 대비 +16.7%↑, 클릭당 31.7원) 달성 ④ 현재 예치금 잔액: G마켓 64,077원 / 옥션 79,333원 (합계 143,410원)."
     },
     {
       "date": "2026-10-20",
