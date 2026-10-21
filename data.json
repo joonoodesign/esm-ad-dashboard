@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-21 09:32:38",
+  "updatedAt": "2026-10-21 09:37:30",
   "account": {
     "masterId": "joonoodesign",
     "gmarketId": "jndesign",
@@ -13,8 +13,9 @@
       "auctionFree": 8138
     }
   },
+  "yesterdaySummary": {},
   "summary30d": {
-    "period": "최근 30일 (2026-09-20 ~ 2026-10-20)",
+    "period": "최근 30일 (2026-09-21 ~ 2026-10-21)",
     "totalCost": 284794,
     "cpcCost": 182394,
     "cppCost": 102400,
@@ -163,59 +164,18 @@
       "priceComp": "설정안함 ➔ 설정함"
     }
   ],
-  "cpcGroups": [
-    {
-      "groupNo": "13638900",
-      "groupName": "A)명함",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "13638916",
-      "groupName": "A)스티커제작",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "13638891",
-      "groupName": "A)취급주의",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "3822725",
-      "groupName": "A)전단지,종이자석",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "13638895",
-      "groupName": "A)실사출력",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "13638886",
-      "groupName": "A)리플렛",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "13638880",
-      "groupName": "A)리뷰스티커",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "13724187",
-      "groupName": "A)빌지,영수증",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    },
-    {
-      "groupNo": "3798157",
-      "groupName": "(A)간편등록",
-      "error": "SyntaxError: Unexpected token '<', \"\r\n<!doctype \"... is not valid JSON"
-    }
-  ],
+  "cpcGroups": [],
   "cpcKeywords": [],
   "dailyBriefings": [
     {
       "date": "2026-10-21",
-      "title": "2026-10-21 오전 9시 정기 성과 보고 및 전방위 최적화 스냅샷",
-      "summary": "최근 30일 총 광고비 284,794원 / 전환매출 1,445,170원 (ROAS 507%). CPP 4개 슬롯 입찰가 인하(월 -31,000원), CPC 42개 키워드 입찰가 정밀 조정, 신규 그룹 A)빌지,영수증 생성 및 43개 세부 키워드 추가, 11개 마스터 상품 전체 프로모션 문구(확장 상품명) SEO 최적화 완료."
+      "title": "2026-10-21 오전 9시 정기 성과 보고 (전일  실적 및 누적 현황)",
+      "summary": "전일() 파워클릭 노출 0회, 클릭 0회, 광고비 0원(평균 CPC 0원), 전환매출 0원(ROAS 0%). 최근 30일 파워클릭 누적 광고비 0원, 전환매출 0원 기록."
+    },
+    {
+      "date": "2026-10-20",
+      "title": "2026-10-20 전방위 광고비·키워드·상품 SEO 최적화 완료 스냅샷",
+      "summary": "CPP 4개 슬롯 입찰가 인하(월 -31,000원), CPC 42개 키워드 입찰가 정밀 조정, 신규 그룹 A)빌지,영수증 생성 및 43개 세부 키워드 추가, 11개 마스터 상품 전체 프로모션 문구(확장 상품명) SEO 최적화 완료."
     }
   ]
 }
